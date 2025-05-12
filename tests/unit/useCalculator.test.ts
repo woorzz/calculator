@@ -1,12 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { add, subtract, multiply} from '~/composables/useCalculator';
+import { add, subtract, multiply,divide} from '~/composables/useCalculator';
 
-function divide(a: number, b: number): number {
-    if (b === 0) {
-        throw new Error('Cannot divide by zero')
-    }
-    return a / b
-};
 
 describe('add', () => {
     it('should return the sum of two positive numbers', () => {
