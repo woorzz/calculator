@@ -1,121 +1,154 @@
 <template>
     <div
-        class="w-full max-w-sm mx-auto p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border dark:border-gray-700">
-        <div class="mb-2 text-right text-sm text-gray-500 dark:text-gray-400 h-5">
-            {{ expression }}
+        class="w-full max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border dark:border-gray-700 flex flex-col md:flex-row gap-6">
+        <div class="flex-1">
+            <div class="mb-2 text-right text-sm text-gray-500 dark:text-gray-400 h-5">
+                {{ expression }}
+            </div>
+
+            <div
+                class="text-right text-4xl font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6 min-h-[72px] text-gray-900 dark:text-white break-words">
+                {{ current || '0' }}
+            </div>
+
+            <div class="grid grid-cols-4 gap-4">
+                <button v-for="n in digits" :key="n" class="btn" @click="append(n)">
+                    {{ n }}
+                </button>
+
+                <button class="btn operator" @click="selectOperator('+')">+</button>
+                <button class="btn operator" @click="selectOperator('-')">−</button>
+                <button class="btn operator" @click="selectOperator('*')">×</button>
+                <button class="btn operator" @click="selectOperator('/')">÷</button>
+
+                <button class="btn bg-yellow-400 hover:bg-yellow-500 text-white" @click="backspace">
+                    ←
+                </button>
+                <button class="btn bg-yellow-500 hover:bg-yellow-600 text-white" @click="reset">
+                    C
+                </button>
+
+                <button class="btn bg-green-500 hover:bg-green-600 text-white col-span-2" @click="calculate">
+                    =
+                </button>
+            </div>
         </div>
 
-        <div
-            class="text-right text-4xl font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6 min-h-[72px] text-gray-900 dark:text-white break-words">
-            {{ current || '0' }}
-        </div>
+        <div class="w-full md:w-64 bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-inner flex flex-col">
+            <h2 class="text-lg font-bold mb-4 text-gray-700 dark:text-gray-200">Historique</h2>
 
-        <div class="grid grid-cols-4 gap-4">
-            <button v-for="n in digits" :key="n" class="btn" @click="append(n)">
-                {{ n }}
-            </button>
+            <div class="flex-1 overflow-auto max-h-[500px] space-y-2 pr-1">
+                <ul>
+                    <li v-for="(entry, index) in history" :key="index"
+                        class="bg-white dark:bg-gray-700 rounded-lg p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition mt-3"
+                        @click="loadFromHistory(entry)">
+                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ entry.expression }}</div>
+                        <div class="text-xl font-mono text-gray-900 dark:text-white">= {{ entry.result }}</div>
+                    </li>
+                </ul>
+            </div>
 
-            <button class="btn operator" @click="selectOperator('+')">+</button>
-            <button class="btn operator" @click="selectOperator('−')">−</button>
-            <button class="btn operator" @click="selectOperator('×')">×</button>
-            <button class="btn operator" @click="selectOperator('÷')">÷</button>
-
-            <button class="btn bg-yellow-500 hover:bg-yellow-600 text-white col-span-2" @click="reset">
-                C
-            </button>
-            <button class="btn bg-green-500 hover:bg-green-600 text-white col-span-2" @click="calculate">
-                =
-            </button>
-        </div>
-
-        <div v-if="history.length" class="mt-6 text-sm">
-            <h2 class="font-bold mb-2 text-gray-700 dark:text-white">Historique</h2>
-            <ul>
-                <li v-for="(entry, index) in history" :key="index"
-                    class="mb-1 cursor-pointer text-gray-500 hover:underline dark:text-gray-300"
-                    @click="usePrevious(index)">
-                    {{ entry.display }}
-                </li>
-            </ul>
-            <button @click="clearHistory" class="mt-2 text-xs text-red-500 hover:underline">
-                Effacer l’historique
+            <button @click="clearHistory" class="mt-4 text-sm text-red-500 hover:underline self-end">
+                Supprimer l'historique
             </button>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { add, subtract, multiply, divide } from '~/composables/useCalculator'
 
 const current = ref('')
 const first = ref(null)
 const operator = ref(null)
-const second = ref(null)
 const history = ref([])
+const expressionFromHistory = ref('')
+const justCalculated = ref(false)
 
 const digits = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.']
 
-const append = (value) => {
+const append = value => {
     if (value === '.' && current.value.includes('.')) return
-    current.value += value
+
+    if (justCalculated.value) {
+        current.value = value
+        justCalculated.value = false
+    } else {
+        current.value += value
+    }
 }
 
-const selectOperator = (opSymbol) => {
+
+const backspace = () => {
+    current.value = current.value.slice(0, -1)
+}
+
+const selectOperator = op => {
     if (current.value === '') return
     first.value = Number(current.value)
     current.value = ''
-    operator.value = opSymbol
+    operator.value = op
 }
 
 const calculate = () => {
-    second.value = Number(current.value)
-    if (first.value === null || isNaN(second.value)) return
+    const second = Number(current.value)
+    if (first.value === null || isNaN(second)) return
 
     let result = 0
-    let symbol = operator.value
+    if (operator.value === '+') result = add(first.value, second)
+    if (operator.value === '-') result = subtract(first.value, second)
+    if (operator.value === '*') result = multiply(first.value, second)
+    if (operator.value === '/') result = divide(first.value, second)
 
-    if (symbol === '+') result = add(first.value, second.value)
-    if (symbol === '−') result = subtract(first.value, second.value)
-    if (symbol === '×') result = multiply(first.value, second.value)
-    if (symbol === '÷') result = divide(first.value, second.value)
+    const resultStr = result.toString()
+    history.value.unshift({ expression: `${first.value} ${operator.value} ${second}`, result: resultStr })
+    saveHistory()
 
-    const display = `${first.value} ${symbol} ${second.value} = ${result}`
-    history.value.unshift({ display, result, first: first.value, operator: symbol, second: second.value })
-
-    current.value = result.toString()
+    current.value = resultStr
     first.value = null
     operator.value = null
-    second.value = null
+    expressionFromHistory.value = ''
+    justCalculated.value = true // <- important !
 }
+
 
 const reset = () => {
     current.value = ''
     first.value = null
     operator.value = null
-    second.value = null
+    expressionFromHistory.value = ''
 }
 
-const usePrevious = (index) => {
-    const entry = history.value[index]
-    current.value = entry.result.toString()
-    first.value = entry.first
-    operator.value = entry.operator
-    second.value = entry.second
-}
-
-const clearHistory = () => {
-    history.value = []
+const loadFromHistory = entry => {
+    current.value = entry.result
+    first.value = null
+    operator.value = null
+    expressionFromHistory.value = entry.expression
 }
 
 const expression = computed(() => {
-    if (first.value !== null && operator.value && second.value !== null) {
-        return `${first.value} ${operator.value} ${second.value}`
-    }
+    if (expressionFromHistory.value) return expressionFromHistory.value
     if (first.value !== null && operator.value) {
         return `${first.value} ${operator.value} ${current.value}`
     }
     return ''
+})
+
+const saveHistory = () => {
+    localStorage.setItem('calc-history', JSON.stringify(history.value))
+}
+
+const clearHistory = () => {
+    history.value = []
+    localStorage.removeItem('calc-history')
+}
+
+onMounted(() => {
+    const stored = localStorage.getItem('calc-history')
+    if (stored) {
+        history.value = JSON.parse(stored)
+    }
 })
 </script>
 
