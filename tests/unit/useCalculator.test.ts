@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { add, subtract} from '~/composables/useCalculator';
+import { add, subtract, multiply} from '~/composables/useCalculator';
 
-
-function multiply(a: number, b: number): number {
-    return a * b
-}
 
 describe('add', () => {
     it('should return the sum of two positive numbers', () => {
@@ -58,4 +54,4 @@ describe('multiply', () => {
     it('should return 0 when multiplying by 0', () => {
         expect(multiply(5, 0)).toBe(0);
     });
-});
+}); 
