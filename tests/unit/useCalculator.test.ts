@@ -1,9 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { add } from '~/composables/useCalculator';
+import { add, subtract} from '~/composables/useCalculator';
 
-function subtract(a: number, b: number): number {
-    return a - b
-}
+
 
 describe('add', () => {
     it('should return the sum of two positive numbers', () => {
@@ -39,4 +37,4 @@ describe('subtract', () => {
     it('should return 0 when subtracting a number from itself', () => {
         expect(subtract(5, 5)).toBe(0);
     });
-});
+})
