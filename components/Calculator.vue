@@ -16,15 +16,29 @@
             </button>
 
             <button class="btn operator" @click="selectOperator('+')">+</button>
-            <button class="btn operator" @click="selectOperator('-')">−</button>
-            <button class="btn operator" @click="selectOperator('*')">×</button>
-            <button class="btn operator" @click="selectOperator('/')">÷</button>
+            <button class="btn operator" @click="selectOperator('−')">−</button>
+            <button class="btn operator" @click="selectOperator('×')">×</button>
+            <button class="btn operator" @click="selectOperator('÷')">÷</button>
 
             <button class="btn bg-yellow-500 hover:bg-yellow-600 text-white col-span-2" @click="reset">
                 C
             </button>
             <button class="btn bg-green-500 hover:bg-green-600 text-white col-span-2" @click="calculate">
                 =
+            </button>
+        </div>
+
+        <div v-if="history.length" class="mt-6 text-sm">
+            <h2 class="font-bold mb-2 text-gray-700 dark:text-white">Historique</h2>
+            <ul>
+                <li v-for="(entry, index) in history" :key="index"
+                    class="mb-1 cursor-pointer text-gray-500 hover:underline dark:text-gray-300"
+                    @click="usePrevious(index)">
+                    {{ entry.display }}
+                </li>
+            </ul>
+            <button @click="clearHistory" class="mt-2 text-xs text-red-500 hover:underline">
+                Effacer l’historique
             </button>
         </div>
     </div>
@@ -37,43 +51,67 @@ import { add, subtract, multiply, divide } from '~/composables/useCalculator'
 const current = ref('')
 const first = ref(null)
 const operator = ref(null)
+const second = ref(null)
+const history = ref([])
 
 const digits = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.']
 
-const append = value => {
+const append = (value) => {
     if (value === '.' && current.value.includes('.')) return
     current.value += value
 }
 
-const selectOperator = op => {
+const selectOperator = (opSymbol) => {
     if (current.value === '') return
     first.value = Number(current.value)
     current.value = ''
-    operator.value = op
+    operator.value = opSymbol
 }
 
 const calculate = () => {
-    const second = Number(current.value)
-    if (first.value === null || isNaN(second)) return
+    second.value = Number(current.value)
+    if (first.value === null || isNaN(second.value)) return
 
     let result = 0
-    if (operator.value === '+') result = add(first.value, second)
-    if (operator.value === '-') result = subtract(first.value, second)
-    if (operator.value === '*') result = multiply(first.value, second)
-    if (operator.value === '/') result = divide(first.value, second)
+    let symbol = operator.value
+
+    if (symbol === '+') result = add(first.value, second.value)
+    if (symbol === '−') result = subtract(first.value, second.value)
+    if (symbol === '×') result = multiply(first.value, second.value)
+    if (symbol === '÷') result = divide(first.value, second.value)
+
+    const display = `${first.value} ${symbol} ${second.value} = ${result}`
+    history.value.unshift({ display, result, first: first.value, operator: symbol, second: second.value })
 
     current.value = result.toString()
     first.value = null
     operator.value = null
+    second.value = null
 }
 
 const reset = () => {
     current.value = ''
     first.value = null
     operator.value = null
+    second.value = null
+}
+
+const usePrevious = (index) => {
+    const entry = history.value[index]
+    current.value = entry.result.toString()
+    first.value = entry.first
+    operator.value = entry.operator
+    second.value = entry.second
+}
+
+const clearHistory = () => {
+    history.value = []
 }
 
 const expression = computed(() => {
+    if (first.value !== null && operator.value && second.value !== null) {
+        return `${first.value} ${operator.value} ${second.value}`
+    }
     if (first.value !== null && operator.value) {
         return `${first.value} ${operator.value} ${current.value}`
     }
