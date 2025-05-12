@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { add, subtract, multiply} from '~/composables/useCalculator';
 
+function divide(a: number, b: number): number {
+    if (b === 0) {
+        throw new Error('Cannot divide by zero')
+    }
+    return a / b
+};
 
 describe('add', () => {
     it('should return the sum of two positive numbers', () => {
@@ -55,3 +61,21 @@ describe('multiply', () => {
         expect(multiply(5, 0)).toBe(0);
     });
 }); 
+
+describe('divide', () => {
+    it('should return the quotient of two positive numbers', () => {
+        expect(divide(6, 3)).toBe(2);
+    });
+
+    it('should return the quotient of a positive and a negative number', () => {
+        expect(divide(5, -5)).toBe(-1);
+    });
+
+    it('should return the quotient of two negative numbers', () => {
+        expect(divide(-6, -3)).toBe(2);
+    });
+
+    it('should throw an error when dividing by 0', () => {
+        expect(() => divide(5, 0)).toThrow('Cannot divide by zero');
+    });
+});
