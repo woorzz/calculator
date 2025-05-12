@@ -61,6 +61,7 @@
 </template>
 
 <script setup>
+defineOptions({ name: 'CalculatorView' })
 import { ref, computed, onMounted } from 'vue'
 import { add, subtract, multiply, divide } from '~/composables/useCalculator'
 
@@ -70,8 +71,6 @@ const operator = ref(null)
 const history = ref([])
 const expressionFromHistory = ref('')
 const justCalculated = ref(false)
-
-const digits = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.']
 
 const append = value => {
     if (value === '.' && current.value.includes('.')) return
@@ -84,10 +83,6 @@ const append = value => {
     }
 }
 
-
-const backspace = () => {
-    current.value = current.value.slice(0, -1)
-}
 
 const selectOperator = op => {
     if (current.value === '') return
