@@ -2,6 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { add, subtract} from '~/composables/useCalculator';
 
 
+function multiply(a: number, b: number): number {
+    return a * b
+}
 
 describe('add', () => {
     it('should return the sum of two positive numbers', () => {
@@ -37,4 +40,22 @@ describe('subtract', () => {
     it('should return 0 when subtracting a number from itself', () => {
         expect(subtract(5, 5)).toBe(0);
     });
-})
+}); 
+
+describe('multiply', () => {
+    it('should return the product of two positive numbers', () => {
+        expect(multiply(2, 3)).toBe(6);
+    });
+
+    it('should return the product of a positive and a negative number', () => {
+        expect(multiply(5, -3)).toBe(-15);
+    });
+
+    it('should return the product of two negative numbers', () => {
+        expect(multiply(-2, -3)).toBe(6);
+    });
+
+    it('should return 0 when multiplying by 0', () => {
+        expect(multiply(5, 0)).toBe(0);
+    });
+});
