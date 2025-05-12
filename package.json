@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .js",
-    "test": "vitest",
+    "test:unit": "vitest --config vitest.config.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
