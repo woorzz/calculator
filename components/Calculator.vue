@@ -1,40 +1,54 @@
 <template>
   <div
+    data-testid="calculator"
     class="w-full max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border dark:border-gray-700 flex flex-col md:flex-row gap-6"
   >
     <div class="flex-1">
       <div class="mb-2 text-right text-sm text-gray-500 dark:text-gray-400 h-5">
         {{ expression }}
       </div>
-
       <div
+        data-testid="display"
         class="text-right text-4xl font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6 min-h-[72px] text-gray-900 dark:text-white break-words"
       >
         {{ current || '0' }}
       </div>
 
       <div class="grid grid-cols-4 gap-4">
-        <button v-for="n in ['7', '8', '9']" :key="n" class="btn" @click="append(n)">
-          {{ n }}
+        <button data-testid="btn-7" class="btn" @click="append('7')">7</button>
+        <button data-testid="btn-8" class="btn" @click="append('8')">8</button>
+        <button data-testid="btn-9" class="btn" @click="append('9')">9</button>
+        <button data-testid="btn-divide" class="btn operator" @click="selectOperator('/')">
+          ÷
         </button>
-        <button class="btn operator" @click="selectOperator('/')">÷</button>
 
-        <button v-for="n in ['4', '5', '6']" :key="n" class="btn" @click="append(n)">
-          {{ n }}
+        <button data-testid="btn-4" class="btn" @click="append('4')">4</button>
+        <button data-testid="btn-5" class="btn" @click="append('5')">5</button>
+        <button data-testid="btn-6" class="btn" @click="append('6')">6</button>
+        <button data-testid="btn-multiply" class="btn operator" @click="selectOperator('*')">
+          ×
         </button>
-        <button class="btn operator" @click="selectOperator('*')">×</button>
 
-        <button v-for="n in ['1', '2', '3']" :key="n" class="btn" @click="append(n)">
-          {{ n }}
+        <button data-testid="btn-1" class="btn" @click="append('1')">1</button>
+        <button data-testid="btn-2" class="btn" @click="append('2')">2</button>
+        <button data-testid="btn-3" class="btn" @click="append('3')">3</button>
+        <button data-testid="btn-subtract" class="btn operator" @click="selectOperator('-')">
+          −
         </button>
-        <button class="btn operator" @click="selectOperator('-')">−</button>
-
-        <button class="btn bg-yellow-500 hover:bg-yellow-600 text-white" @click="reset">C</button>
-        <button class="btn" @click="append('0')">0</button>
-        <button class="btn" @click="append('.')">.</button>
-        <button class="btn operator" @click="selectOperator('+')">+</button>
 
         <button
+          data-testid="btn-clear"
+          class="btn bg-yellow-500 hover:bg-yellow-600 text-white"
+          @click="reset()"
+        >
+          C
+        </button>
+        <button data-testid="btn-0" class="btn" @click="append('0')">0</button>
+        <button data-testid="btn-dot" class="btn" @click="append('.')">.</button>
+        <button data-testid="btn-add" class="btn operator" @click="selectOperator('+')">+</button>
+
+        <button
+          data-testid="btn-equals"
           class="btn bg-green-500 hover:bg-green-600 text-white col-span-4"
           @click="calculate"
         >
@@ -53,7 +67,7 @@
           <li
             v-for="(entry, index) in history"
             :key="index"
-            class="bg-white dark:bg-gray-700 rounded-lg p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition mt-3"
+            class="bg-white dark:bg-gray-700 rounded-lg p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition"
             @click="loadFromHistory(entry)"
           >
             <div class="text-sm text-gray-500 dark:text-gray-400">{{ entry.expression }}</div>
@@ -62,7 +76,11 @@
         </ul>
       </div>
 
-      <button @click="clearHistory" class="mt-4 text-sm text-red-500 hover:underline self-end">
+      <button
+        data-testid="btn-clear-history"
+        @click="clearHistory"
+        class="mt-4 text-sm text-red-500 hover:underline self-end"
+      >
         Supprimer l'historique
       </button>
     </div>
