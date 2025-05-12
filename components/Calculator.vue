@@ -12,26 +12,31 @@
             </div>
 
             <div class="grid grid-cols-4 gap-4">
-                <button v-for="n in digits" :key="n" class="btn" @click="append(n)">
+                <button v-for="n in ['7', '8', '9']" :key="n" class="btn" @click="append(n)">
                     {{ n }}
                 </button>
-
-                <button class="btn operator" @click="selectOperator('+')">+</button>
-                <button class="btn operator" @click="selectOperator('-')">−</button>
-                <button class="btn operator" @click="selectOperator('*')">×</button>
                 <button class="btn operator" @click="selectOperator('/')">÷</button>
 
-                <button class="btn bg-yellow-400 hover:bg-yellow-500 text-white" @click="backspace">
-                    ←
+                <button v-for="n in ['4', '5', '6']" :key="n" class="btn" @click="append(n)">
+                    {{ n }}
                 </button>
-                <button class="btn bg-yellow-500 hover:bg-yellow-600 text-white" @click="reset">
-                    C
-                </button>
+                <button class="btn operator" @click="selectOperator('*')">×</button>
 
-                <button class="btn bg-green-500 hover:bg-green-600 text-white col-span-2" @click="calculate">
+                <button v-for="n in ['1', '2', '3']" :key="n" class="btn" @click="append(n)">
+                    {{ n }}
+                </button>
+                <button class="btn operator" @click="selectOperator('-')">−</button>
+
+                <button class="btn bg-yellow-500 hover:bg-yellow-600 text-white" @click="reset">C</button>
+                <button class="btn" @click="append('0')">0</button>
+                <button class="btn" @click="append('.')">.</button>
+                <button class="btn operator" @click="selectOperator('+')">+</button>
+
+                <button class="btn bg-green-500 hover:bg-green-600 text-white col-span-4" @click="calculate">
                     =
                 </button>
             </div>
+
         </div>
 
         <div class="w-full md:w-64 bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-inner flex flex-col">
@@ -109,7 +114,7 @@ const calculate = () => {
     first.value = null
     operator.value = null
     expressionFromHistory.value = ''
-    justCalculated.value = true // <- important !
+    justCalculated.value = true
 }
 
 
