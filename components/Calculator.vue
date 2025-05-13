@@ -1,19 +1,19 @@
 <template>
   <div
     data-testid="calculator"
-    class="w-full max-w-4xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border dark:border-gray-700 flex flex-col md:flex-row gap-6"
+    class="w-full max-w-4xl mx-auto p-6 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border dark:border-neutral-900 flex flex-col md:flex-row gap-6"
   >
     <div class="flex-1">
       <div
         data-testid="expression"
-        class="mb-2 text-right text-sm text-gray-500 dark:text-gray-400 h-5"
+        class="mb-2 text-right text-sm text-neutral-500 dark:text-neutral-400 h-5"
       >
         {{ expression }}
       </div>
 
       <div
         data-testid="display"
-        class="text-right text-4xl font-mono bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6 min-h-[72px] text-gray-900 dark:text-white break-words"
+        class="text-right text-4xl font-mono bg-neutral-100 dark:bg-neutral-800 p-4 rounded-lg mb-6 min-h-[72px] text-neutral-900 dark:text-white break-words"
       >
         {{ display }}
       </div>
@@ -60,20 +60,20 @@
     </div>
 
     <div
-      class="w-full md:w-64 bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-inner flex flex-col"
+      class="w-full md:w-64 flex-shrink-0 bg-neutral-50 dark:bg-neutral-800 rounded-xl p-4 shadow-inner flex flex-col h-[500px]"
     >
-      <h2 class="text-lg font-bold mb-4 text-gray-700 dark:text-gray-200">Historique</h2>
+      <h2 class="text-lg font-bold mb-4 text-neutral-700 dark:text-neutral-200">Historique</h2>
 
-      <div class="flex-1 overflow-auto max-h-[500px] pr-1 space-y-2">
+      <div class="flex-1 overflow-auto pr-1 space-y-2">
         <ul>
           <li
             v-for="(h, i) in history"
             :key="i"
-            class="bg-white dark:bg-gray-700 rounded-lg p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition mt-2"
+            class="bg-white dark:bg-neutral-700 rounded-lg p-2 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-600 transition mt-2"
             @click="loadFromHistory(h)"
           >
-            <div class="text-sm text-gray-500 dark:text-gray-400">{{ h.expression }}</div>
-            <div class="text-xl font-mono text-gray-900 dark:text-white">= {{ h.result }}</div>
+            <div class="text-sm text-neutral-500 dark:text-neutral-400">{{ h.expression }}</div>
+            <div class="text-xl font-mono text-neutral-900 dark:text-white">= {{ h.result }}</div>
           </li>
         </ul>
       </div>
@@ -109,7 +109,7 @@ const {
 
 <style scoped>
 .btn {
-  @apply py-4 text-xl font-bold rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 transition;
+  @apply py-4 text-xl font-bold rounded-lg bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-white hover:bg-neutral-300 dark:hover:bg-neutral-600 transition;
 }
 
 .operator {
