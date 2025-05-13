@@ -99,11 +99,12 @@ export function useCalculator() {
 
   function clearHistory() {
     history.value = []
+    reset()
     clearStoredHistory()
   }
 
   function handleMinusClick() {
-    if (!current.value && !first.value) {
+    if (!current.value) {
       current.value = '-'
     } else if (operator.value === null && current.value) {
       selectOperator('-')
