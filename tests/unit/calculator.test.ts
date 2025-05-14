@@ -88,3 +88,24 @@ describe('divide', () => {
     expect(divide(1, 4)).toBeCloseTo(0.25)
   })
 })
+
+describe('combined operations', () => {
+  it(' (2 + 3) * (4 - 1) - (10 / 2) = 10', () => {
+    const sum = add(2, 3)
+    const diff = subtract(4, 1)
+    const prod = multiply(sum, diff)
+    const quot = divide(10, 2)
+    const result = subtract(prod, quot)
+    expect(result).toBe(10)
+  })
+
+  it('should handle decimals correctly in a complex expression', () => {
+    const result = divide(multiply(add(0.1, 0.2), 10), 2)
+    expect(result).toBeCloseTo(1.5)
+  })
+
+  it('should handle negative numbers in combined operations', () => {
+    const result = add(multiply(-2, 3), divide(9, -3))
+    expect(result).toBe(-9)
+  })
+})
