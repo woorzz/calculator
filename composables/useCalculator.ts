@@ -1,4 +1,4 @@
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { add, subtract, multiply, divide } from '~/services/calculator'
 import {
   getHistory,
@@ -23,10 +23,6 @@ export function useCalculator() {
   function loadInitialHistory() {
     history.value = getHistory()
   }
-
-  onMounted(() => {
-    loadInitialHistory()
-  })
 
   function append(value: string) {
     if (value === '.' && current.value.includes('.')) return

@@ -91,6 +91,8 @@
 
 <script setup lang="ts">
 import { useCalculator } from '~/composables/useCalculator'
+import { onMounted } from 'vue'
+
 defineOptions({ name: 'CalculatorView' })
 
 const {
@@ -105,6 +107,11 @@ const {
   loadFromHistory,
   handleMinusClick,
 } = useCalculator()
+
+const calc = useCalculator()
+onMounted(() => {
+  calc.loadInitialHistory()
+})
 </script>
 
 <style scoped>
