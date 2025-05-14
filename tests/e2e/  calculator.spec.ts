@@ -2,7 +2,11 @@ import { test, expect } from '@playwright/test'
 
 test.describe('Calculator', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000', { timeout: 15000 })
+    await page.goto('http://localhost:3000', {
+      waitUntil: 'networkidle',
+      timeout: 15000,
+    })
+
     await page.waitForLoadState('domcontentloaded')
     await page.getByTestId('btn-clear').click()
   })

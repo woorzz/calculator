@@ -11,7 +11,10 @@
     "lint": "eslint --ext .js",
     "test:unit": "vitest --config vitest.config.ts",
     "test:e2e": "playwright test",
-    "prepare": "husky install"
+    "prepare": "husky install", 
+    "format": "prettier --write .", 
+    "test:e2eui": "playwright test --ui"
+
   },
   "dependencies": {
     "nuxt": "^3.17.2",
